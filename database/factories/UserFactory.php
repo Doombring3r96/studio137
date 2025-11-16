@@ -4,41 +4,60 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
+use App\Models\Role;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
- */
 class UserFactory extends Factory
 {
-    /**
-     * The current password being used by the factory.
-     */
     protected static ?string $password;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
+            'nombre' => $this->faker->name(),
+            'email' => $this->faker->unique()->safeEmail(),
+            'password_hash' => static::$password ??= Hash::make('password'),
+            'telefono' => $this->faker->phoneNumber(),
+            'role_id' => Role::factory(),
+            'manager_id' => null,
+            'razon_social' => $this->faker->company(),
+            'is_active' => true,
+            'created_by' => null,
+            'updated_by' => null,
         ];
     }
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     */
     public function unverified(): static
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    public function developer(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role_id' => Role::where('name', 'developer')->first()->id,
+        ]);
+    }
+
+    public function cliente(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role_id' => Role::where('name', 'cliente')->first()->id,
+        ]);
+    }
+
+    public function designer(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role_id' => Role::where('name', 'designer')->first()->id,
+        ]);
+    }
+
+    public function cm(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role_id' => Role::where('name', 'cm')->first()->id,
         ]);
     }
 }
