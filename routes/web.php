@@ -2,8 +2,23 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
+
+// Controladores generales
 use App\Http\Controllers\ServiceController;
-// ... otros controladores
+use App\Http\Controllers\BriefController;
+use App\Http\Controllers\AssignmentController;
+use App\Http\Controllers\SalaryController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\PublicationCalendarController;
+use App\Http\Controllers\LogoController;
+use App\Http\Controllers\ReportController;
+
+// Controladores para Cliente
+use App\Http\Controllers\Client\DashboardController as ClientDashboardController;
+use App\Http\Controllers\Client\ServiceController as ClientServiceController;
+use App\Http\Controllers\Client\ReportController as ClientReportController;
+use App\Http\Controllers\Client\PaymentController as ClientPaymentController;
 
 Route::get('/', function () {
     return redirect()->route('dashboard');
@@ -61,6 +76,39 @@ Route::middleware('auth')->group(function () {
             ->name('reports.performance');
         Route::get('/reports/assignments', [ReportController::class, 'assignments'])
             ->name('reports.assignments');
+    });
+
+    // =================================================================
+    // RUTAS ESPECÍFICAS PARA CLIENTE
+    // =================================================================
+    Route::middleware(['auth', 'can:access-dashboard'])->prefix('client')->name('client.')->group(function () {
+        // Dashboard
+        Route::get('/dashboard', [ClientDashboardController::class, 'index'])->name('dashboard');
+        
+        // Servicios
+        Route::get('/services', [ClientServiceController::class, 'index'])->name('services.index');
+        Route::get('/services/{service}', [ClientServiceController::class, 'show'])->name('services.show');
+        Route::get('/services/{service}/brief', [ClientServiceController::class, 'showBriefForm'])->name('services.brief.create');
+        Route::post('/services/{service}/brief', [ClientServiceController::class, 'storeBrief'])->name('services.brief.store');
+        Route::get('/services/{service}/logos', [ClientServiceController::class, 'showLogos'])->name('services.logos');
+        Route::get('/services/{service}/calendars', [ClientServiceController::class, 'showCalendars'])->name('services.calendars');
+        
+        // Acciones para logos
+        Route::post('/services/logos/{logo}/approve', [ClientServiceController::class, 'approveLogo'])->name('services.logos.approve');
+        Route::post('/services/logos/{logo}/reject', [ClientServiceController::class, 'rejectLogo'])->name('services.logos.reject');
+        
+        // Acciones para calendarios
+        Route::post('/services/calendars/{calendar}/approve', [ClientServiceController::class, 'approveCalendar'])->name('services.calendars.approve');
+        Route::post('/services/calendars/{calendar}/correct', [ClientServiceController::class, 'correctCalendar'])->name('services.calendars.correct');
+        
+        // Informes
+        Route::get('/reports', [ClientReportController::class, 'index'])->name('reports.index');
+        Route::get('/reports/{report}', [ClientReportController::class, 'show'])->name('reports.show');
+        
+        // Pagos
+        Route::get('/payments', [ClientPaymentController::class, 'index'])->name('payments.index');
+        Route::get('/payments/{payment}/pay', [ClientPaymentController::class, 'showPaymentForm'])->name('payments.pay');
+        Route::post('/payments/{payment}/pay', [ClientPaymentController::class, 'processPayment'])->name('payments.process');
     });
 });
 
