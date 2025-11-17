@@ -22,14 +22,14 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request)
-{
-    $request->authenticate();
+    public function store(LoginRequest $request): RedirectResponse
+    {
+        $request->authenticate();
 
-    $request->session()->regenerate();
+        $request->session()->regenerate();
 
-    return $this->redirectToRoleDashboard();
-}
+        return $this->redirectToRoleDashboard();
+    }
 
     /**
      * Destroy an authenticated session.
@@ -44,5 +44,32 @@ class AuthenticatedSessionController extends Controller
 
         return redirect('/');
     }
-    
+
+    /**
+     * Redirect users based on their role
+     */
+    protected function redirectToRoleDashboard(): RedirectResponse
+    {
+        $user = Auth::user();
+
+        if ($user->isCliente()) {
+            return redirect()->route('client.dashboard');
+        } elseif ($user->isCM()) {
+            return redirect()->route('cm.dashboard');
+        } elseif ($user->isDeveloper() || $user->isCEO()) {
+            return redirect()->route('dashboard');
+        } elseif ($user->isDirectorMarca() || $user->isDirectorCreativo()) {
+            return redirect()->route('dashboard');
+        } elseif ($user->isDesigner()) {
+            return redirect()->route('dashboard');
+        }
+
+        // Default redirect
+        return redirect()->route('dashboard');
+    }
+    protected $policies = [
+    // ... políticas existentes
+    \App\Models\PublicationCalendar::class => \App\Policies\PublicationCalendarPolicy::class,
+    \App\Models\Artwork::class => \App\Policies\ArtworkPolicy::class,
+];
 }

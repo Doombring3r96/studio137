@@ -150,4 +150,13 @@ class ServiceController extends Controller
     {
         // Implementar notificación de cambio de estado
     }
+    private function getServiceTypeName($type): string
+{
+    return match($type) {
+        'identidad_corporativa' => 'Identidad Corporativa',
+        'community_manager' => 'Community Manager',
+        'marketing_digital' => 'Marketing Digital',
+        default => $type
+    };
+}
 }

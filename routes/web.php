@@ -19,6 +19,11 @@ use App\Http\Controllers\Client\DashboardController as ClientDashboardController
 use App\Http\Controllers\Client\ServiceController as ClientServiceController;
 use App\Http\Controllers\Client\ReportController as ClientReportController;
 use App\Http\Controllers\Client\PaymentController as ClientPaymentController;
+// Controladores para CM
+use App\Http\Controllers\Cm\DashboardController as CmDashboardController;
+use App\Http\Controllers\Cm\CalendarController as CmCalendarController;
+use App\Http\Controllers\Cm\ArtworkController as CmArtworkController;
+use App\Http\Controllers\Cm\SalaryController as CmSalaryController;
 
 Route::get('/', function () {
     return redirect()->route('dashboard');
@@ -109,6 +114,39 @@ Route::middleware('auth')->group(function () {
         Route::get('/payments', [ClientPaymentController::class, 'index'])->name('payments.index');
         Route::get('/payments/{payment}/pay', [ClientPaymentController::class, 'showPaymentForm'])->name('payments.pay');
         Route::post('/payments/{payment}/pay', [ClientPaymentController::class, 'processPayment'])->name('payments.process');
+    });
+    // =================================================================
+    // RUTAS ESPECÍFICAS PARA CM
+    // =================================================================
+    // Rutas para Community Manager
+    Route::middleware(['auth', 'can:access-dashboard'])->prefix('cm')->name('cm.')->group(function () {
+    // Dashboard
+        Route::get('/dashboard', [Cm\DashboardController::class, 'index'])->name('dashboard');
+    
+        // Calendarios de Publicación
+        Route::get('/calendars', [Cm\CalendarController::class, 'index'])->name('calendars.index');
+        Route::get('/calendars/create', [Cm\CalendarController::class, 'create'])->name('calendars.create');
+        Route::post('/calendars', [Cm\CalendarController::class, 'store'])->name('calendars.store');
+        Route::get('/calendars/{calendar}', [Cm\CalendarController::class, 'show'])->name('calendars.show');
+        Route::get('/calendars/{calendar}/edit', [Cm\CalendarController::class, 'edit'])->name('calendars.edit');
+        Route::put('/calendars/{calendar}', [Cm\CalendarController::class, 'update'])->name('calendars.update');
+        Route::delete('/calendars/{calendar}', [Cm\CalendarController::class, 'destroy'])->name('calendars.destroy');
+    
+        // Artes para Calendarios
+        Route::get('/calendars/{calendar}/artworks', [Cm\ArtworkController::class, 'index'])->name('calendars.artworks.index');
+        Route::get('/calendars/{calendar}/artworks/create', [Cm\ArtworkController::class, 'create'])->name('calendars.artworks.create');
+        Route::post('/calendars/{calendar}/artworks', [Cm\ArtworkController::class, 'store'])->name('calendars.artworks.store');
+        Route::get('/calendars/{calendar}/artworks/{artwork}/edit', [Cm\ArtworkController::class, 'edit'])->name('calendars.artworks.edit');
+        Route::put('/calendars/{calendar}/artworks/{artwork}', [Cm\ArtworkController::class, 'update'])->name('calendars.artworks.update');
+        Route::delete('/calendars/{calendar}/artworks/{artwork}', [Cm\ArtworkController::class, 'destroy'])->name('calendars.artworks.destroy');
+        
+        // Sueldos
+        Route::get('/salaries', [Cm\SalaryController::class, 'index'])->name('salaries.index');
+        Route::get('/salaries/{salary}', [Cm\SalaryController::class, 'show'])->name('salaries.show');
+        
+        // Acciones específicas
+        Route::post('/calendars/{calendar}/submit', [Cm\CalendarController::class, 'submitForApproval'])->name('calendars.submit');
+        Route::post('/calendars/{calendar}/mark-completed', [Cm\CalendarController::class, 'markAsCompleted'])->name('calendars.mark-completed');
     });
 });
 

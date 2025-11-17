@@ -13,7 +13,7 @@
                 <!-- Navigation Links -->
                 @if(auth()->check() && auth()->user()->isCliente())
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+                    <x-nav-link href="{{ route('client.dashboard') }}" :active="request()->routeIs('client.dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     <x-nav-link href="{{ route('client.services.index') }}" :active="request()->routeIs('client.services.*')">
@@ -26,8 +26,19 @@
                         {{ __('Pagos') }}
                     </x-nav-link>
                 </div>
+                @elseif(auth()->check() && auth()->user()->isCM())
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link href="{{ route('cm.dashboard') }}" :active="request()->routeIs('cm.dashboard')">
+                        {{ __('Dashboard') }}
+                    </x-nav-link>
+                    <x-nav-link href="{{ route('cm.calendars.index') }}" :active="request()->routeIs('cm.calendars.*')">
+                        {{ __('Tareas Pendientes') }}
+                    </x-nav-link>
+                    <x-nav-link href="{{ route('cm.salaries.index') }}" :active="request()->routeIs('cm.salaries.*')">
+                        {{ __('Pago Sueldo') }}
+                    </x-nav-link>
+                </div>
                 @endif
-            </div>
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
@@ -75,7 +86,7 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         @if(auth()->check() && auth()->user()->isCliente())
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+            <x-responsive-nav-link href="{{ route('client.dashboard') }}" :active="request()->routeIs('client.dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link href="{{ route('client.services.index') }}" :active="request()->routeIs('client.services.*')">
@@ -88,8 +99,20 @@
                 {{ __('Pagos') }}
             </x-responsive-nav-link>
         </div>
+        @elseif(auth()->check() && auth()->user()->isCM())
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link href="{{ route('cm.dashboard') }}" :active="request()->routeIs('cm.dashboard')">
+                {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('cm.calendars.index') }}" :active="request()->routeIs('cm.calendars.*')">
+                {{ __('Tareas Pendientes') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('cm.salaries.index') }}" :active="request()->routeIs('cm.salaries.*')">
+                {{ __('Pago Sueldo') }}
+            </x-responsive-nav-link>
+        </div>
         @endif
-
+        
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="flex items-center px-4">
