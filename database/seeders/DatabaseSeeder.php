@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             ['id' => 4, 'name' => 'Director Creativo', 'description' => 'Dirige al Diseñador gráfico'],
             ['id' => 5, 'name' => 'Community Manager', 'description' => 'Gestiona redes sociales y campañas'],
             ['id' => 6, 'name' => 'Diseñador gráfico', 'description' => 'Diseña contenido creativo'],
+            ['id' => 7, 'name' => 'Cliente', 'description' => 'Usuario externo que recibe servicios'],
         ];
 
         foreach ($roles as $role) {
@@ -36,12 +37,13 @@ class DatabaseSeeder extends Seeder
 
         // 2️⃣ Crear un usuario por cada rol
         $users = [
-            ['name' => 'Desarrollador', 'email' => 'dev@example.com', 'role_id' => 1],
-            ['name' => 'CEO', 'email' => 'ceo@example.com', 'role_id' => 2],
-            ['name' => 'Director de Marca', 'email' => 'marca@example.com', 'role_id' => 3],
-            ['name' => 'Director Creativo', 'email' => 'creativo@example.com', 'role_id' => 4],
-            ['name' => 'Community Manager', 'email' => 'community@example.com', 'role_id' => 5],
-            ['name' => 'Diseñador gráfico', 'email' => 'diseño@example.com', 'role_id' => 6],
+            ['name' => 'Desarrollador', 'email' => 'dev@gmail.com', 'role_id' => 1],
+            ['name' => 'CEO', 'email' => 'ceo@gmail.com', 'role_id' => 2],
+            ['name' => 'Director de Marca', 'email' => 'marca@gmail.com', 'role_id' => 3],
+            ['name' => 'Director Creativo', 'email' => 'creativo@gmail.com', 'role_id' => 4],
+            ['name' => 'Community Manager', 'email' => 'community@gmail.com', 'role_id' => 5],
+            ['name' => 'Diseñador gráfico', 'email' => 'diseño@gmail.com', 'role_id' => 6],
+            ['name' => 'Cliente', 'email' => 'cliente@gmail.com', 'role_id' => 7],
         ];
 
         foreach ($users as $user) {
